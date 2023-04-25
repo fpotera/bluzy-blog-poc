@@ -3,7 +3,30 @@ version: "3.9"
 services:
 
   db:
-    image: postgres
+    image: db
+    build:
+      context: ./database/postgres/
+      target: db
     restart: always
     environment:
       POSTGRES_PASSWORD: test
+    networks:
+      - net
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8081:8080"
+    expose:
+      - "8081"
+    networks:
+      - net
+
+networks:
+  net:
+
+volumes:
+  db:
