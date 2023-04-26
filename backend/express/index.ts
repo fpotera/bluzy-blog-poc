@@ -13,18 +13,36 @@
     limitations under the License.
 */
 
-import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+
+const sequelize = require('./sequelize') ;
+const app = require('./express/app');
 
 dotenv.config();
 
-const app: Express = express();
 const port = process.env.PORT;
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
-});
+async function assertDatabaseConnectionOk() {
+	console.log(`Checking database connection...`);
+	try {
+		await sequelize.authenticate();
+		console.log('Database connection OK!');
+	} catch (error: any) {
+		console.log('Unable to connect to the database:');
+		console.log(error.message);
+		process.exit(1);
+	}
+}
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-});
+
+async function init() {
+	await assertDatabaseConnectionOk();
+
+	console.log(`Starting Sequelize + Express example on port ${port}...`);
+
+	app.listen(port, () => {
+		console.log(`Express server started on port ${port}. Try some routes, such as '/api/users'.`);
+	});
+}
+
+init();
