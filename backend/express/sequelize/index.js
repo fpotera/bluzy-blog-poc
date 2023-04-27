@@ -1,10 +1,13 @@
+require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const { applyExtraSetup } = require('./extra-setup');
+
+const DB_URL = process.env.DB_URL;
 
 // In a real app, you should keep the database connection URL as an environment variable.
 // But for this example, we will just use a local SQLite database.
 // const sequelize = new Sequelize(process.env.DB_CONNECTION_URL);
-const sequelize = new Sequelize('postgres://postgres:test@localhost:5432/postgres');
+const sequelize = new Sequelize(DB_URL);
 
 const modelDefiners = [
 	require('./models/user.model'),
