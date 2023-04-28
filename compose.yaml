@@ -37,7 +37,7 @@ services:
   server:
     image: blog-server
     build:
-      context: ./backend/express/
+      context: ./
     ports:
       - "8888:8888"
     expose:
