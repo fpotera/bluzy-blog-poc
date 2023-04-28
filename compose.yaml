@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.8"
 
 services:
 
@@ -35,10 +35,9 @@ services:
       - net
 
   server:
-    image: server
+    image: blog-server
     build:
       context: ./backend/express/
-      target: server
     ports:
       - "8888:8888"
     expose:
