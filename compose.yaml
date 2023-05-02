@@ -9,7 +9,8 @@ services:
       target: db
     restart: always
     environment:
-      POSTGRES_PASSWORD: test
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_MULTIPLE_DATABASES=idp,blog
     ports:
       - "5432:5432"
     expose:
@@ -28,9 +29,9 @@ services:
     image: adminer
     restart: always
     ports:
-      - "8080:8080"
+      - "8081:8080"
     expose:
-      - "8080"
+      - "8081"
     networks:
       - net
 
@@ -49,7 +50,32 @@ services:
       - net
     volumes:
       - server:/home/node/app
- 
+
+  idp:
+    image: idp
+    build:
+      context: ./idp/
+      target: idp
+    command:
+      - start-dev
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: db
+      DB_DATABASE: idp
+      DB_USER: idp
+      DB_PASSWORD: password
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - net
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    expose:
+      - "8080"
+      - "8443"
+
 networks:
   net:
 
