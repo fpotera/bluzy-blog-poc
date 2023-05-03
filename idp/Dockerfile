@@ -16,3 +16,5 @@ ENV KEYCLOAK_ADMIN=admin
 ENV KEYCLOAK_ADMIN_PASSWORD=admin
 
 HEALTHCHECK --interval=20s --timeout=3s CMD curl -f http://localhost:8080/ || exit 1
+
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
