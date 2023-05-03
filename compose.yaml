@@ -59,11 +59,10 @@ services:
     command:
       - start-dev
     environment:
-      DB_VENDOR: postgres
-      DB_ADDR: db
-      DB_DATABASE: idp
-      DB_USER: idp
-      DB_PASSWORD: password
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db/idp
+      KC_DB_USERNAME: idp
+      KC_DB_PASSWORD: password
     depends_on:
       db:
         condition: service_healthy
