@@ -1,24 +1,49 @@
 import { Component } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import { filter } from 'rxjs/operators';
 
 @Component({
+  standalone: true,
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+  styleUrls: ['./app.component.sass'],
+  imports: [NgIf]
 })
 export class AppComponent {
   title = 'blog';
 
   constructor(private oauthService: OAuthService) {
-    oauthService.configure(authConfig);
-    oauthService.loadDiscoveryDocumentAndTryLogin();
-    oauthService.setupAutomaticSilentRefresh();
+    this.oauthService.configure(authConfig);
+    this.oauthService.loadDiscoveryDocumentAndLogin();
+    this.oauthService.setupAutomaticSilentRefresh();
+    this.oauthService.events
+    .pipe(filter((e) => e.type === 'token_received'))
+    .subscribe((_) => this.oauthService.loadUserProfile());
+  }
+
+  get userName(): string {
+    const claims = this.oauthService.getIdentityClaims();
+    if (!claims) return 'Null';
+    return claims['given_name'];
+  }
+
+  get idToken(): string {
+    return this.oauthService.getIdToken();
+  }
+
+  get accessToken(): string {
+    return this.oauthService.getAccessToken();
+  }
+
+  refresh() {
+    this.oauthService.refreshToken();
   }
 }
 
 export const authConfig: AuthConfig = {
   // Url of the Identity Provider
-  issuer: 'http://localhost:8080/realms/TestRealm/.well-known/openid-configuration',
+  issuer: 'http://localhost:8080/realms/TestRealm',
 
   // URL of the SPA to redirect the user to after login
   redirectUri: window.location.origin + '/index.html',
@@ -42,4 +67,9 @@ export const authConfig: AuthConfig = {
   scope: 'openid profile email',
 
   showDebugInformation: true,
+  sessionChecksEnabled: false,
+
+  timeoutFactor: 0.01,
+  // disablePKCI: true,
+  checkOrigin: false
 };
