@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const routes = {
 	users: require('./routes/users'),
@@ -12,8 +13,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.static('public'));
-
 // We create a wrapper to workaround async errors not being transmitted correctly.
 function makeHandlerAwareOfAsyncErrors(handler) {
 	return async function(req, res, next) {
@@ -25,14 +24,27 @@ function makeHandlerAwareOfAsyncErrors(handler) {
 	};
 }
 
-// We provide a root route just as an example
-app.get('/', (req, res) => {
-	res.send(`
-		<h2>Hello, Sequelize + Express!</h2>
-		<p>Make sure you have executed <b>npm run setup-example-db</b> once to have a populated example database. Otherwise, you will get <i>'no such table'</i> errors.</p>
-		<p>Try some routes, such as <a href='/api/users'>/api/users</a> or <a href='/api/orchestras?includeInstruments'>/api/orchestras?includeInstruments</a>!</p>
-		<p>To experiment with POST/PUT/DELETE requests, use a tool for creating HTTP requests such as <a href='https://github.com/jakubroztocil/httpie#readme'>HTTPie</a>, <a href='https://www.postman.com/downloads/'>Postman</a>, or even <a href='https://en.wikipedia.org/wiki/CURL'>the curl command</a>, or write some JS code for it with <a href='https://github.com/sindresorhus/got#readme'>got</a>, <a href='https://github.com/sindresorhus/ky#readme'>ky</a> or <a href='https://github.com/axios/axios#readme'>axios</a>.</p>
-	`);
+app.get('/app/:name', function (req, res, next) {
+	var root = path.join(__dirname, '..', '..', '..', '..', 'frontend', 'dist', 'blog');
+	console.log('Root:', root);
+	var options = {
+		root: root,
+		dotfiles: 'deny',
+		headers: {
+			'x-timestamp': Date.now(),
+			'x-sent': true
+		}
+	};
+  
+	var fileName = req.params.name;
+	res.sendFile(fileName, options, function (err) {
+		console.log('Try to send:', fileName);
+		if (err) {
+			next(err);
+		} else {
+			console.log('Sent:', fileName);
+		}
+	});
 });
 
 // We define the standard REST APIs for each route (if they exist).
