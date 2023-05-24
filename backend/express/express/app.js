@@ -1,6 +1,10 @@
 const express = require('express');
+const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path');
+const Keycloak = require('keycloak-connect');
+
+const memoryStore = new session.MemoryStore();
 
 const routes = {
 	users: require('./routes/users'),
@@ -12,17 +16,25 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+	secret: 'some secret',
+	resave: false,
+	saveUninitialized: true,
+	store: memoryStore
+}));
 
-// We create a wrapper to workaround async errors not being transmitted correctly.
-function makeHandlerAwareOfAsyncErrors(handler) {
-	return async function(req, res, next) {
-		try {
-			await handler(req, res);
-		} catch (error) {
-			next(error);
-		}
-	};
-}
+const keycloak = new Keycloak({
+	store: memoryStore
+});
+  
+app.use(keycloak.middleware({
+	logout: '/logout',
+	admin: '/'
+}));
+  
+app.get('/service/public', function (req, res) {
+	res.json({message: 'public'});
+});
 
 app.get('/app/:name', function (req, res, next) {
 	var root = path.join(__dirname, '..', '..', '..', '..', 'frontend', 'dist', 'blog');
@@ -46,6 +58,17 @@ app.get('/app/:name', function (req, res, next) {
 		}
 	});
 });
+
+// We create a wrapper to workaround async errors not being transmitted correctly.
+function makeHandlerAwareOfAsyncErrors(handler) {
+	return async function(req, res, next) {
+		try {
+			await handler(req, res);
+		} catch (error) {
+			next(error);
+		}
+	};
+}
 
 // We define the standard REST APIs for each route (if they exist).
 for (const [routeName, routeController] of Object.entries(routes)) {
