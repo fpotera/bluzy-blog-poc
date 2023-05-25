@@ -33,7 +33,13 @@ app.use(keycloak.middleware({
 }));
   
 app.get('/service/public', function (req, res) {
+	console.log('Called: /service/public');
 	res.json({message: 'public'});
+});
+
+app.get('/service/secured', keycloak.protect(), function (req, res) {
+	console.log('Called: /service/secured');
+	res.json({message: 'secured'});
 });
 
 app.get('/app/:name', function (req, res, next) {
