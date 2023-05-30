@@ -24,15 +24,6 @@ export class AppComponent {
     this.oauthService.events
     .pipe(filter((e) => e.type === 'token_received'))
     .subscribe((_) => this.oauthService.loadUserProfile());
-
-    var bearerToken = 'Bearer '+this.oauthService.getAccessToken();
-
-    this.http.get('/service/secured', {responseType: 'text', observe: 'response', headers: new HttpHeaders({Authorization: bearerToken})})
-        .pipe(first())
-        .subscribe((response) => {
-          console.log('Result:', response.body);
-          this.result = response.body;
-        });
   }
 
   get userName(): string {
@@ -51,6 +42,15 @@ export class AppComponent {
 
   refresh() {
     this.oauthService.refreshToken();
+
+    var bearerToken = 'Bearer '+this.oauthService.getAccessToken();
+
+    this.http.get('/api/users', {responseType: 'text', observe: 'response', headers: new HttpHeaders({Authorization: bearerToken})})
+        .pipe(first())
+        .subscribe((response) => {
+          console.log('Result:', response.body);
+          this.result = response.body;
+        });
   }
 
   get serviceResult(): string | null {

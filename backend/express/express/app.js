@@ -26,21 +26,11 @@ app.use(session({
 const keycloak = new Keycloak({
 	store: memoryStore
 });
-  
+
 app.use(keycloak.middleware({
 	logout: '/logout',
 	admin: '/'
 }));
-  
-app.get('/service/public', function (req, res) {
-	console.log('Called: /service/public');
-	res.json({message: 'public'});
-});
-
-app.get('/service/secured', keycloak.protect(), function (req, res) {
-	console.log('Called: /service/secured');
-	res.json({message: 'secured'});
-});
 
 app.get('/app/:name', function (req, res, next) {
 	var root = path.join(__dirname, '..', '..', '..', '..', 'frontend', 'dist', 'blog');
@@ -81,30 +71,35 @@ for (const [routeName, routeController] of Object.entries(routes)) {
 	if (routeController.getAll) {
 		app.get(
 			`/api/${routeName}`,
+			keycloak.protect(),
 			makeHandlerAwareOfAsyncErrors(routeController.getAll)
 		);
 	}
 	if (routeController.getById) {
 		app.get(
 			`/api/${routeName}/:id`,
+			keycloak.protect(),
 			makeHandlerAwareOfAsyncErrors(routeController.getById)
 		);
 	}
 	if (routeController.create) {
 		app.post(
 			`/api/${routeName}`,
+			keycloak.protect(),
 			makeHandlerAwareOfAsyncErrors(routeController.create)
 		);
 	}
 	if (routeController.update) {
 		app.put(
 			`/api/${routeName}/:id`,
+			keycloak.protect(),
 			makeHandlerAwareOfAsyncErrors(routeController.update)
 		);
 	}
 	if (routeController.remove) {
 		app.delete(
 			`/api/${routeName}/:id`,
+			keycloak.protect(),
 			makeHandlerAwareOfAsyncErrors(routeController.remove)
 		);
 	}
