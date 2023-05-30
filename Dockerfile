@@ -50,7 +50,7 @@ COPY --from=blog-server-builder /home/node/app/dist/express/routes/* ./express/r
 COPY --from=blog-server-builder /home/node/app/dist/express/app.js ./express/
 COPY --from=blog-server-builder /home/node/app/dist/express/helpers.js ./express/
 COPY backend/express/package.json ./
-COPY backend/express/.env-docker ./.env
+COPY backend/express/.env.development.docker ./.env
 
 RUN npm install
 
