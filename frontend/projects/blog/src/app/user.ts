@@ -13,24 +13,16 @@
     limitations under the License.
 */
 
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
-import { OAuthModule } from 'angular-oauth2-oidc';
+export class User {
+    id: number;
+    username: string;
+    createdAt: string;
+    updatedAt: string;
 
-import { AppComponent } from './app.component';
-
-@NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, 
-    HttpClientModule,
-    OAuthModule.forRoot({
-      resourceServer: {
-          allowedUrls: ['http://localhost:8888/service/secured'],
-          sendAccessToken: true
-      }
-  })],
-  providers: [],
-  bootstrap: [AppComponent]
-})
-export class AppModule {}
+    constructor(id: number, username: string, createdAt: string, updatedAt: string) {
+        this.id = id;
+        this.username = username;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+}
