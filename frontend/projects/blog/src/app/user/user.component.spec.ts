@@ -13,18 +13,26 @@
     limitations under the License.
 */
 
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppComponent } from './app.component';
-import { UserComponent } from './user/user.component';
-import { AppRoutingModule } from './app-routing.module';
+import { UserComponent } from './user.component';
 
-@NgModule({
-  declarations: [AppComponent, UserComponent],
-  imports: [BrowserModule, HttpClientModule, AppRoutingModule],
-  providers: [],
-  bootstrap: [AppComponent]
-})
-export class AppModule {}
+describe('UserComponent', () => {
+  let component: UserComponent;
+  let fixture: ComponentFixture<UserComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ UserComponent ]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(UserComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

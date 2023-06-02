@@ -15,9 +15,9 @@
 
 import { Component } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { RouterOutlet } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { filter, first } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 
 import { authConfig } from './oauth.config';
 
@@ -26,13 +26,12 @@ import { authConfig } from './oauth.config';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass'],
-  imports: [NgIf]
+  imports: [NgIf,RouterOutlet]
 })
 export class AppComponent {
   title = 'blog';
-  result: string | null = '';
 
-  constructor(private oauthService: OAuthService, private http: HttpClient) {
+  constructor(private oauthService: OAuthService) {
     this.oauthService.configure(authConfig);
     this.oauthService.loadDiscoveryDocumentAndLogin();
     this.oauthService.setupAutomaticSilentRefresh();
@@ -57,18 +56,5 @@ export class AppComponent {
 
   refresh() {
     this.oauthService.refreshToken();
-
-    var bearerToken = 'Bearer '+this.oauthService.getAccessToken();
-
-    this.http.get('/api/users', {responseType: 'text', observe: 'response', headers: new HttpHeaders({Authorization: bearerToken})})
-        .pipe(first())
-        .subscribe((response) => {
-          console.log('Result:', response.body);
-          this.result = response.body;
-        });
-  }
-
-  get serviceResult(): string | null {
-    return this.result;
   }
 }
