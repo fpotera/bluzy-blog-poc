@@ -14,17 +14,20 @@
 */
 
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
 
-import { AppComponent } from './app.component';
 import { UserComponent } from './user/user.component';
-import { AppRoutingModule } from './app-routing.module';
+
+const routes: Routes = [
+  { path: 'users', component: UserComponent }
+];
 
 @NgModule({
-  declarations: [AppComponent, UserComponent],
-  imports: [BrowserModule, HttpClientModule, AppRoutingModule],
-  providers: [],
-  bootstrap: [AppComponent]
+  imports: [
+    CommonModule,
+    RouterModule.forRoot(routes)
+  ],
+  exports: [RouterModule]
 })
-export class AppModule {}
+export class AppRoutingModule { }

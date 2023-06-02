@@ -7,7 +7,7 @@
     "build": "rm -fr dist && npx tsc",
     "start": "node -r dotenv/config dist/index.js dotenv_config_path=.env.development.local",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
-    "setup-db": "node dist/database/setup.js"
+    "setup-db": "node -r dotenv/config dist/database/setup.js dotenv_config_path=.env.development.local"
   },
   "keywords": [],
   "author": "Florin Potera",
