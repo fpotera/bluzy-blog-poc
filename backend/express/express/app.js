@@ -3,6 +3,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path');
 const Keycloak = require('keycloak-connect');
+const fs = require('fs');
 
 const memoryStore = new session.MemoryStore();
 
@@ -93,16 +94,27 @@ app.get('/:name', function (req, res, next) {
 			'x-sent': true
 		}
 	};
-  
+
 	var fileName = req.params.name;
-	res.sendFile(fileName, options, function (err) {
-		console.log('Try to send:', fileName);
-		if (err) {
-			next(err);
-		} else {
-			console.log('Sent:', fileName);
-		}
-	});
+	var file = path.join(root, fileName);
+	if(fs.existsSync(file)) {
+		res.sendFile(fileName, options, function (err) {
+			console.log('Try to send:', fileName);
+			if (err) {
+				next(err);
+			} else {
+				console.log('Sent:', fileName);
+			}
+		});
+	}
+	else {
+		next();
+	}
+});
+
+app.use(function(req, res, next){
+	console.log(`redirecting ${req.params.name} to /index.html`);
+	res.redirect('/index.html');
 });
 
 module.exports = app;
