@@ -32,29 +32,6 @@ app.use(keycloak.middleware({
 	admin: '/'
 }));
 
-app.get('/app/:name', function (req, res, next) {
-	var root = path.join(__dirname, '..', '..', '..', '..', 'frontend', 'dist', 'blog');
-	console.log('Root:', root);
-	var options = {
-		root: root,
-		dotfiles: 'deny',
-		headers: {
-			'x-timestamp': Date.now(),
-			'x-sent': true
-		}
-	};
-  
-	var fileName = req.params.name;
-	res.sendFile(fileName, options, function (err) {
-		console.log('Try to send:', fileName);
-		if (err) {
-			next(err);
-		} else {
-			console.log('Sent:', fileName);
-		}
-	});
-});
-
 // We create a wrapper to workaround async errors not being transmitted correctly.
 function makeHandlerAwareOfAsyncErrors(handler) {
 	return async function(req, res, next) {
@@ -104,5 +81,28 @@ for (const [routeName, routeController] of Object.entries(routes)) {
 		);
 	}
 }
+
+app.get('/:name', function (req, res, next) {
+	var root = path.join(__dirname, '..', '..', '..', '..', 'frontend', 'dist', 'blog');
+	console.log('Root:', root);
+	var options = {
+		root: root,
+		dotfiles: 'deny',
+		headers: {
+			'x-timestamp': Date.now(),
+			'x-sent': true
+		}
+	};
+  
+	var fileName = req.params.name;
+	res.sendFile(fileName, options, function (err) {
+		console.log('Try to send:', fileName);
+		if (err) {
+			next(err);
+		} else {
+			console.log('Sent:', fileName);
+		}
+	});
+});
 
 module.exports = app;
