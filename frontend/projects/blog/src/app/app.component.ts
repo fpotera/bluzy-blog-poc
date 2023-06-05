@@ -15,7 +15,7 @@
 
 import { Component } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { filter } from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ import { authConfig } from './oauth.config';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass'],
-  imports: [NgIf,RouterOutlet]
+  imports: [NgIf,RouterOutlet,RouterLink]
 })
 export class AppComponent {
   title = 'blog';
