@@ -13,16 +13,9 @@
     limitations under the License.
 */
 
-export class User {
+export interface User {
     id: number;
     username: string;
     createdAt: string;
     updatedAt: string;
-
-    constructor(id: number, username: string, createdAt: string, updatedAt: string) {
-        this.id = id;
-        this.username = username;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 }

@@ -1,8 +1,13 @@
-<!--nav>
-  <a [routerLink]="['/users']">Users</a>
-</nav>
+<!--nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+  <div class="container">
+      <a class="navbar-brand">Angular Router</a>
+      <ul class="nav navbar-nav" routerLinkActive="active">
+          <li class="nav-item"><a class="nav-link" routerLink="users">Users</a></li>
+      </ul>
+  </div>
+</nav-->
 
-<router-outlet></router-outlet-->
+<router-outlet></router-outlet>
 
 <div *ngIf="idToken">
   <div style="text-align:center">
@@ -22,3 +27,4 @@
     <button (click)="refresh()">Refresh</button>
   </p>
 </div>
+<app-user></app-user>
