@@ -1,3 +1,18 @@
+/*  Copyright 2023 Florin Potera
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -83,9 +98,8 @@ for (const [routeName, routeController] of Object.entries(routes)) {
 	}
 }
 
-app.get('/:name', function (req, res, next) {
+function sendFile(req, res, next, fileName) {
 	var root = path.join(__dirname, '..', '..', '..', '..', 'frontend', 'dist', 'blog');
-	console.log('Root:', root);
 	var options = {
 		root: root,
 		dotfiles: 'deny',
@@ -95,17 +109,24 @@ app.get('/:name', function (req, res, next) {
 		}
 	};
 
+	var fileName = fileName!==undefined ? fileName : req.params.name;
+	res.sendFile(fileName, options, function (err) {
+		console.log('Try to send:', fileName);
+		if (err) {
+			next(err);
+		} else {
+			console.log('Sent:', fileName);
+		}
+	});	
+}
+
+app.get('/:name', function (req, res, next) {
+	var root = path.join(__dirname, '..', '..', '..', '..', 'frontend', 'dist', 'blog');
+
 	var fileName = req.params.name;
 	var file = path.join(root, fileName);
 	if(fs.existsSync(file)) {
-		res.sendFile(fileName, options, function (err) {
-			console.log('Try to send:', fileName);
-			if (err) {
-				next(err);
-			} else {
-				console.log('Sent:', fileName);
-			}
-		});
+		sendFile(req, res, next);
 	}
 	else {
 		next();
@@ -113,8 +134,8 @@ app.get('/:name', function (req, res, next) {
 });
 
 app.use(function(req, res, next){
-	console.log(`redirecting ${req.params.name} to /index.html`);
-	res.redirect('/index.html');
+	console.log(`redirecting to /index.html`);
+	sendFile(req, res, next, 'index.html');
 });
 
 module.exports = app;

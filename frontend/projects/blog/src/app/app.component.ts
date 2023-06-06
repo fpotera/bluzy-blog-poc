@@ -20,13 +20,14 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { filter } from 'rxjs/operators';
 
 import { authConfig } from './oauth.config';
+import { UserComponent } from './user/user.component';
 
 @Component({
   standalone: true,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass'],
-  imports: [NgIf,RouterOutlet,RouterLink]
+  imports: [NgIf,RouterOutlet,RouterLink,UserComponent]
 })
 export class AppComponent {
   title = 'blog';
