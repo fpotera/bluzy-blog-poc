@@ -16,6 +16,8 @@
 import { Component } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { RouterOutlet, RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+
 import { OAuthService } from 'angular-oauth2-oidc';
 import { filter } from 'rxjs/operators';
 
@@ -27,12 +29,15 @@ import { UserComponent } from './user/user.component';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass'],
-  imports: [NgIf,RouterOutlet,RouterLink,UserComponent]
+  imports: [NgIf,RouterOutlet,MatButtonModule,RouterLink,UserComponent]
 })
 export class AppComponent {
   title = 'blog';
 
   constructor(private oauthService: OAuthService) {
+  }
+
+  login() {
     this.oauthService.configure(authConfig);
     this.oauthService.loadDiscoveryDocumentAndLogin();
     this.oauthService.setupAutomaticSilentRefresh();
