@@ -29,7 +29,7 @@ import { User } from './user';
   imports: [MatTableModule]
 })
 export class UserComponent {
-  users: User[] = [];
+  dataSource: User[] = [];
   displayedColumns: string[] = ['id', 'username'];
 
   constructor(private oauthService: OAuthService, private http: HttpClient) {
@@ -39,7 +39,7 @@ export class UserComponent {
         .pipe(first())
         .subscribe((body) => {
           console.log('Result:', body);
-          this.users = body;
+          this.dataSource = body;
         });
   }
 }
