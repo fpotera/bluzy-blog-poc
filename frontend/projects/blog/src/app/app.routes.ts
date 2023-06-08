@@ -13,21 +13,10 @@
     limitations under the License.
 */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { UserComponent } from './user/user.component';
 
-const routes: Routes = [
-  { path: 'users', component: UserComponent }
+export const APP_ROUTES: Routes = [
+    { path: 'users', component: UserComponent }
 ];
-
-@NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forRoot(routes)
-  ],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }
