@@ -14,53 +14,42 @@
 */
 
 import { Component } from '@angular/core';
-import { NgIf } from '@angular/common';
-import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
+import { Router, RouterOutlet, RouterLinkWithHref } from '@angular/router';
 
-import { OAuthService } from 'angular-oauth2-oidc';
 import { filter } from 'rxjs/operators';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 import { authConfig } from './oauth.config';
 import { UserComponent } from './user/user.component';
+import { HomeComponent } from './home/home.component';
 
 @Component({
   standalone: true,
+  // tslint:disable-next-line:component-selector
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass'],
-  imports: [NgIf,RouterOutlet,MatButtonModule,RouterLinkWithHref,UserComponent]
+  imports: [RouterOutlet,RouterLinkWithHref,UserComponent,HomeComponent]
 })
 export class AppComponent {
-  title = 'blog';
+  constructor(private router: Router, private oauthService: OAuthService) {
+    this.configureCodeFlow();
 
-  constructor(private oauthService: OAuthService) {
-  }
-
-  login() {
-    this.oauthService.configure(authConfig);
-    this.oauthService.loadDiscoveryDocumentAndLogin();
-    this.oauthService.setupAutomaticSilentRefresh();
     this.oauthService.events
-    .pipe(filter((e) => e.type === 'token_received'))
-    .subscribe((_) => this.oauthService.loadUserProfile());
+      .pipe(filter((e) => e.type === 'token_received'))
+      .subscribe((_) => {
+        console.debug('state', this.oauthService.state);
+        this.oauthService.loadUserProfile();
+
+        const scopes = this.oauthService.getGrantedScopes();
+        console.debug('scopes', scopes);
+      });
   }
 
-  get userName(): string {
-    const claims = this.oauthService.getIdentityClaims();
-    if (!claims) return 'Null';
-    return claims['given_name'];
-  }
+  private configureCodeFlow() {
+    this.oauthService.configure(authConfig);
+    this.oauthService.loadDiscoveryDocumentAndTryLogin().then((_) => {});
 
-  get idToken(): string {
-    return this.oauthService.getIdToken();
-  }
-
-  get accessToken(): string {
-    return this.oauthService.getAccessToken();
-  }
-
-  refresh() {
-    this.oauthService.refreshToken();
+    this.oauthService.setupAutomaticSilentRefresh();
   }
 }
