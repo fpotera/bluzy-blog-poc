@@ -18,16 +18,19 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { MatNativeDateModule } from '@angular/material/core';
+import { PreloadAllModules, provideRouter, withDebugTracing, withPreloading, withRouterConfig } from '@angular/router';
 
 import { provideOAuthClient } from 'angular-oauth2-oidc';
 
 import { AppComponent } from './app/app.component';
+import { APP_ROUTES } from './app/app.routes';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideAnimations(),
     provideHttpClient(),
     provideOAuthClient(),
-    importProvidersFrom(MatNativeDateModule)
+    importProvidersFrom(MatNativeDateModule),
+    provideRouter(APP_ROUTES, withPreloading(PreloadAllModules), withDebugTracing())
   ]
 }).catch(err => console.error(err));

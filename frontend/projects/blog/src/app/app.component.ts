@@ -15,7 +15,7 @@
 
 import { Component } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 
 import { OAuthService } from 'angular-oauth2-oidc';
@@ -29,7 +29,7 @@ import { UserComponent } from './user/user.component';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass'],
-  imports: [NgIf,RouterOutlet,MatButtonModule,RouterLink,UserComponent]
+  imports: [NgIf,RouterOutlet,MatButtonModule,RouterLinkWithHref,UserComponent]
 })
 export class AppComponent {
   title = 'blog';
