@@ -15,8 +15,25 @@
 
 import { Routes } from '@angular/router';
 
+import { HomeComponent } from './home/home.component';
 import { UserComponent } from './user/user.component';
 
-export const APP_ROUTES: Routes = [
-    { path: 'users', component: UserComponent }
-];
+export let APP_ROUTES: Routes = [
+    {
+      path: '',
+      redirectTo: 'home',
+      pathMatch: 'full',
+    },
+    {
+      path: 'home',
+      component: HomeComponent,
+    },
+    {
+      path: 'users',
+      component: UserComponent,
+    },
+    {
+      path: '**',
+      redirectTo: 'home',
+    },
+  ];
