@@ -18,7 +18,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { MatNativeDateModule } from '@angular/material/core';
-import { PreloadAllModules, provideRouter, withDebugTracing, withPreloading, withRouterConfig } from '@angular/router';
+import { PreloadAllModules, provideRouter, withDebugTracing, withPreloading } from '@angular/router';
 
 import { provideOAuthClient } from 'angular-oauth2-oidc';
 

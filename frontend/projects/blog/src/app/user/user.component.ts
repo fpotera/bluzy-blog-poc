@@ -14,32 +14,27 @@
 */
 
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
-import { OAuthService } from 'angular-oauth2-oidc';
-import { first } from 'rxjs/operators';
 
-import { User } from './user';
+import { User } from '../entities/user';
+import { ResttService } from '../services/rest.service';
 
 @Component({
   standalone: true,
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.sass'],
-  imports: [MatTableModule]
+  imports: [MatTableModule],
+  providers: [ResttService]
 })
 export class UserComponent {
-  dataSource: User[] = [];
   displayedColumns: string[] = ['id', 'username'];
 
-  constructor(private oauthService: OAuthService, private http: HttpClient) {
-    var bearerToken = `Bearer ${this.oauthService.getAccessToken()}`;
+  constructor(private restService: ResttService) {
+    restService.getUsers();
+  }
 
-    this.http.get<User[]>('/api/users', {responseType: 'json', observe: 'body', headers: new HttpHeaders({Authorization: bearerToken})})
-        .pipe(first())
-        .subscribe((body) => {
-          console.log('Result:', body);
-          this.dataSource = body;
-        });
+  get dataSource(): User[] {
+    return this.restService.users;
   }
 }
