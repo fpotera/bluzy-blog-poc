@@ -13,25 +13,24 @@
     limitations under the License.
 */
 
-const express = require('express');
-const session = require('express-session');
-const bodyParser = require('body-parser');
-const path = require('path');
-const Keycloak = require('keycloak-connect');
-const fs = require('fs');
+import express, { Express, Request, Response, NextFunction } from 'express';
+import session, { MemoryStore } from 'express-session';
+import { json, urlencoded } from 'body-parser';
+import { join } from 'path';
+import { existsSync } from 'fs';
 
-const memoryStore = new session.MemoryStore();
+import Keycloak from 'keycloak-connect';
+
+const memoryStore = new MemoryStore();
 
 const routes = {
-	users: require('./routes/users'),
-	// Add more routes here...
-	// items: require('./routes/items'),
+	users: require('./routes/users')
 };
 
-const app = express();
+const app: Express = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 app.use(session({
 	secret: 'some secret',
 	resave: false,
@@ -49,8 +48,8 @@ app.use(keycloak.middleware({
 }));
 
 // We create a wrapper to workaround async errors not being transmitted correctly.
-function makeHandlerAwareOfAsyncErrors(handler) {
-	return async function(req, res, next) {
+function makeHandlerAwareOfAsyncErrors(handler: any) {
+	return async function(req: Request, res: Response, next: NextFunction) {
 		try {
 			await handler(req, res);
 		} catch (error) {
@@ -98,8 +97,8 @@ for (const [routeName, routeController] of Object.entries(routes)) {
 	}
 }
 
-function sendFile(req, res, next, fileName) {
-	var root = path.join(__dirname, '..', '..', '..', '..', 'frontend', 'dist', 'blog');
+function sendFile(req: Request, res: Response, next: NextFunction, fileName?: string) {
+	var root = join(__dirname, '..', '..', '..', '..', 'frontend', 'dist', 'blog');
 	var options = {
 		root: root,
 		dotfiles: 'deny',
@@ -109,7 +108,7 @@ function sendFile(req, res, next, fileName) {
 		}
 	};
 
-	var fileName = fileName!==undefined ? fileName : req.params.name;
+	var fileName: string| undefined = fileName!==undefined ? fileName : req.params.name;
 	res.sendFile(fileName, options, function (err) {
 		console.log('Try to send:', fileName);
 		if (err) {
@@ -121,11 +120,11 @@ function sendFile(req, res, next, fileName) {
 }
 
 app.get('/:name', function (req, res, next) {
-	var root = path.join(__dirname, '..', '..', '..', '..', 'frontend', 'dist', 'blog');
+	var root = join(__dirname, '..', '..', '..', '..', 'frontend', 'dist', 'blog');
 
 	var fileName = req.params.name;
-	var file = path.join(root, fileName);
-	if(fs.existsSync(file)) {
+	var file = join(root, fileName);
+	if(existsSync(file)) {
 		sendFile(req, res, next);
 	}
 	else {
