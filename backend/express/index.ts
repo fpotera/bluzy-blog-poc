@@ -15,8 +15,8 @@
 
 import dotenv from 'dotenv';
 
-const sequelize = require('./sequelize') ;
-const app = require('./express/app');
+import sequelize from './sequelize';
+import app from './express/app';
 
 dotenv.config();
 

@@ -21,10 +21,13 @@ import { existsSync } from 'fs';
 
 import Keycloak from 'keycloak-connect';
 
+import { UsersCRUDOps } from './routes/users';
+import { CRUD } from './routes/crud';
+
 const memoryStore = new MemoryStore();
 
-const routes = {
-	users: require('./routes/users')
+const routes: {[index:string]: CRUD} = {
+	users: new UsersCRUDOps()
 };
 
 const app: Express = express();
@@ -47,7 +50,6 @@ app.use(keycloak.middleware({
 	admin: '/'
 }));
 
-// We create a wrapper to workaround async errors not being transmitted correctly.
 function makeHandlerAwareOfAsyncErrors(handler: any) {
 	return async function(req: Request, res: Response, next: NextFunction) {
 		try {
@@ -58,7 +60,6 @@ function makeHandlerAwareOfAsyncErrors(handler: any) {
 	};
 }
 
-// We define the standard REST APIs for each route (if they exist).
 for (const [routeName, routeController] of Object.entries(routes)) {
 	if (routeController.getAll) {
 		app.get(
@@ -137,4 +138,4 @@ app.use(function(req, res, next){
 	sendFile(req, res, next, 'index.html');
 });
 
-module.exports = app;
+export default app;
