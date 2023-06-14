@@ -18,7 +18,6 @@ import { Sequelize } from 'sequelize';
 import { applyExtraSetup } from './extra-setup';
 import userModel from './models/user.model';
 
-require('dotenv').config();
 const DB_URL = process.env.DB_URL!;
 
 const sequelize: any = new Sequelize(DB_URL);
