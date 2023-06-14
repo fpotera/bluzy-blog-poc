@@ -13,12 +13,8 @@
     limitations under the License.
 */
 
-import dotenv from 'dotenv';
-
 import sequelize from './sequelize';
 import app from './express/app';
-
-dotenv.config();
 
 const port = process.env.PORT;
 
@@ -33,7 +29,6 @@ async function assertDatabaseConnectionOk() {
 		process.exit(1);
 	}
 }
-
 
 async function init() {
 	await assertDatabaseConnectionOk();
