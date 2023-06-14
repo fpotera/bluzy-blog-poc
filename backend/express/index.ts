@@ -34,7 +34,6 @@ async function assertDatabaseConnectionOk() {
 	}
 }
 
-
 async function init() {
 	await assertDatabaseConnectionOk();
 

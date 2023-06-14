@@ -15,19 +15,19 @@
 
 import { Request, Response } from 'express';
 
-const { models } = require('../../sequelize');
+import sequalize from '../../sequelize';
 import { getIdParam } from '../helpers';
 import { CRUD } from './crud';
 
 export class UsersCRUDOps implements CRUD {
 	public async getAll(req: Request, res: Response) {
-		const users = await models.user.findAll();
+		const users = await sequalize.models.user.findAll();
 		res.status(200).json(users);
 	};
 	
 	public async getById(req: Request, res:Response) {
 		const id = getIdParam(req);
-		const user = await models.user.findByPk(id);
+		const user = await sequalize.models.user.findByPk(id);
 		if (user) {
 			res.status(200).json(user);
 		} else {
@@ -39,7 +39,7 @@ export class UsersCRUDOps implements CRUD {
 		if (req.body.id) {
 			res.status(400).send(`Bad request: ID should not be provided, since it is determined automatically by the database.`)
 		} else {
-			await models.user.create(req.body);
+			await sequalize.models.user.create(req.body);
 			res.status(201).end();
 		}
 	};
@@ -49,7 +49,7 @@ export class UsersCRUDOps implements CRUD {
 	
 		// We only accept an UPDATE request if the `:id` param matches the body `id`
 		if (req.body.id === id) {
-			await models.user.update(req.body, {
+			await sequalize.models.user.update(req.body, {
 				where: {
 					id: id
 				}
@@ -62,7 +62,7 @@ export class UsersCRUDOps implements CRUD {
 	
 	public async remove(req: Request, res: Response) {
 		const id = getIdParam(req);
-		await models.user.destroy({
+		await sequalize.models.user.destroy({
 			where: {
 				id: id
 			}
