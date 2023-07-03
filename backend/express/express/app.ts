@@ -102,7 +102,6 @@ function sendFile(req: Request, res: Response, next: NextFunction, fileName?: st
 	var root = join(__dirname, '..', '..', '..', '..', 'frontend', 'dist', 'blog');
 	var options = {
 		root: root,
-		dotfiles: 'deny',
 		headers: {
 			'x-timestamp': Date.now(),
 			'x-sent': true

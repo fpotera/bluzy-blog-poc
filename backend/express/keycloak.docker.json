@@ -1,0 +1,8 @@
+{
+    "realm": "TestRealm",
+    "auth-server-url": "http://idp:8080/",
+    "ssl-required": "external",
+    "resource": "TestClient",
+    "public-client": true,
+    "confidential-port": 0
+}
