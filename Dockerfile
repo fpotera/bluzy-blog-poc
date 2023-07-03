@@ -49,9 +49,9 @@ COPY --from=blog-server-builder /home/node/app/dist/sequelize/extra-setup.js ./s
 COPY --from=blog-server-builder /home/node/app/dist/express/routes/* ./express/routes/
 COPY --from=blog-server-builder /home/node/app/dist/express/app.js ./express/
 COPY --from=blog-server-builder /home/node/app/dist/express/helpers.js ./express/
-COPY backend/express/keycloak.docker.json ./keycloak.json
 COPY backend/express/package.json ./
 COPY backend/express/.env.development.docker ./.env
+COPY backend/express/keycloak.docker.json ./keycloak.json
 
 RUN npm install
 
