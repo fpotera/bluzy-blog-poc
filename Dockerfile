@@ -41,9 +41,6 @@ FROM node:19-bullseye-slim AS blog-server
 USER node
 WORKDIR /home/node/app
 
-COPY backend/express/package.json ./
-COPY backend/express/.env.development.docker ./.env
-COPY backend/express/keycloak.docker.json ./keycloak.json
 COPY --from=blog-ui-builder /home/node/app/dist/blog/* ./public/
 COPY --from=blog-server-builder /home/node/app/dist/index.js ./
 COPY --from=blog-server-builder /home/node/app/dist/sequelize/models/* ./sequelize/models/
@@ -52,6 +49,9 @@ COPY --from=blog-server-builder /home/node/app/dist/sequelize/extra-setup.js ./s
 COPY --from=blog-server-builder /home/node/app/dist/express/routes/* ./express/routes/
 COPY --from=blog-server-builder /home/node/app/dist/express/app.js ./express/
 COPY --from=blog-server-builder /home/node/app/dist/express/helpers.js ./express/
+COPY backend/express/keycloak.docker.json ./keycloak.json
+COPY backend/express/package.json ./
+COPY backend/express/.env.development.docker ./.env
 
 RUN npm install
 
