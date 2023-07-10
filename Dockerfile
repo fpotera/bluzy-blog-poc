@@ -1,4 +1,4 @@
-FROM node:19-bullseye-slim AS blog-ui-builder
+FROM node:20-bookworm-slim AS blog-ui-builder
 
 WORKDIR /home/node/app
 
@@ -18,7 +18,7 @@ RUN npm install
 RUN npm install -g @angular/cli
 RUN ng build
 
-FROM node:19-bullseye-slim AS blog-server-builder
+FROM node:20-bookworm-slim AS blog-server-builder
 
 USER node
 WORKDIR /home/node/app
@@ -36,7 +36,7 @@ COPY backend/express/package.json ./
 RUN npm install
 RUN npm run build
 
-FROM node:19-bullseye-slim AS blog-server
+FROM node:20-bookworm-slim AS blog-server
 
 USER node
 WORKDIR /home/node/app
